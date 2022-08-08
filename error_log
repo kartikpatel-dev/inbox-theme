@@ -1,0 +1,4 @@
+[06-May-2022 04:51:14 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function get_header() in /home1/inboxb1k/public_html/ardigital/wp-content/themes/inboxtech/index.php:17
+Stack trace:
+#0 {main}
+  thrown in /home1/inboxb1k/public_html/ardigital/wp-content/themes/inboxtech/index.php on line 17
