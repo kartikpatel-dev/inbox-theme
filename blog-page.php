@@ -4,6 +4,8 @@ Template Name: Blog Page
 */
 
 get_header();
+
+echo do_shortcode(['cmb-frontend-form']);
 ?>
 
 <section class="page-title-section">
@@ -50,7 +52,7 @@ get_header();
                 <?php } ?>
             }
         </style>
-        <input type="text" name="post_search_text" value="Post Search" >
+
           <div class="topblog" >
             <div class="row">
               <div class="col-md-1"></div>
