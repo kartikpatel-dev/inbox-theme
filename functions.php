@@ -6,7 +6,80 @@ function bootstrapstarter_wp_setup() {
 
 }
 
+function wds_frontend_form_register() {
+    $cmb = new_cmb2_box( array(
+        'id'           => 'front-end-post-form',
+        'object_types' => array( 'post' ),
+        'hookup'       => false,
+        'save_fields'  => false,
+    ) );
 
+    $cmb->add_field( array(
+        'name'    => __( 'New Post Title', 'wds-post-submit' ),
+        'id'      => 'submitted_post_title',
+        'type'    => 'text',
+        'default' => __( 'New Post', 'wds-post-submit' ),
+    ) );
+
+    $cmb->add_field( array(
+        'name'    => __( 'New Post Content', 'wds-post-submit' ),
+        'id'      => 'submitted_post_content',
+        'type'    => 'wysiwyg',
+        'options' => array(
+            'textarea_rows' => 12,
+            'media_buttons' => false,
+        ),
+    ) );
+
+    $cmb->add_field( array(
+        'name'       => __( 'Featured Image for New Post', 'wds-post-submit' ),
+        'id'         => 'submitted_post_thumbnail',
+        'type'       => 'text',
+        'attributes' => array(
+            'type' => 'file', // Let's use a standard file upload field
+        ),
+    ) );
+
+    $cmb->add_field( array(
+        'name' => __( 'Your Name', 'wds-post-submit' ),
+        'desc' => __( 'Please enter your name for author credit on the new post.', 'wds-post-submit' ),
+        'id'   => 'submitted_author_name',
+        'type' => 'text',
+    ) );
+
+    $cmb->add_field( array(
+        'name' => __( 'Your Email', 'wds-post-submit' ),
+        'desc' => __( 'Please enter your email so we can contact you if we use your post.', 'wds-post-submit' ),
+        'id'   => 'submitted_author_email',
+        'type' => 'text_email',
+    ) );
+
+}
+add_action( 'cmb2_init', 'wds_frontend_form_register' );
+
+function wds_handle_frontend_new_post_form_submission( $cmb, $post_data = array() ) {
+
+    // If no form submission, bail
+    if ( empty( $_POST ) ) {
+        return false;
+    }
+
+    // check required $_POST variables and security nonce
+    if (
+        ! isset( $_POST['submit-cmb'], $_POST['object_id'], $_POST[ $cmb->nonce() ] )
+        || ! wp_verify_nonce( $_POST[ $cmb->nonce() ], $cmb->nonce() )
+    ) {
+        return new WP_Error( 'security_fail', __( 'Security check failed.' ) );
+    }
+
+    if ( empty( $_POST['submitted_post_title'] ) ) {
+        return new WP_Error( 'post_data_missing', __( 'New post requires a title.' ) );
+    }
+
+    // Do WordPress insert_post stuff
+
+    return $new_submission_id;
+}
 
 // Prevent WP from adding <p> tags on all post types
 
